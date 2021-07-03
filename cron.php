@@ -1,15 +1,17 @@
 <?php
 
+use Illuminate\Database\Capsule\Manager as Capsule;
+use Illuminate\Database\QueryException;
+
 require __DIR__ . "/../../../init.php";
 
 $apiKey = null;
 $currencies = null;
 $baseCurrency = null;
-
 $setCurrencies = null;
 
 try {
-    $configuration = \WHMCS\Database\Capsule::table("tbladdonmodules")->where("module", "=", "wovocurrencyconverter")->get();
+    $configuration = Capsule::table("tbladdonmodules")->where("module", "=", "wovocurrencyconverter")->get();
     if ($configuration) {
         foreach ($configuration as $obj) {
             if ($obj->setting == "currencies") {
@@ -52,12 +54,12 @@ try {
         foreach ($rates as $key => $value) {
             if (in_array($key, $setCurrencies)) {
                 $newValue = $rates['EUR'] / $rates[$baseCurrency] * $value;
-                \WHMCS\Database\Capsule::table("tblcurrencies")->where("code", "=", $key)->update(["rate" => $newValue]);
+                Capsule::table("tblcurrencies")->where("code", "=", $key)->update(["rate" => $newValue]);
                 $allCurrencies[$key] = $newValue;
             }
         }
     }
-} catch (\Illuminate\Database\QueryException $ex) {
+} catch (QueryException $ex) {
     echo $ex->getMessage();
 } catch (Exception $e) {
     echo $e->getMessage();

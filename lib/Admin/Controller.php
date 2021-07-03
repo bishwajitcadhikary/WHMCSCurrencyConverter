@@ -2,9 +2,10 @@
 
 namespace WHMCS\Module\Addon\WovoCurrencyConverter\Admin;
 
+use Illuminate\Database\Capsule\Manager as Capsule;
+
 class Controller
 {
-
     public function index($vars)
     {
         $apiKey = $vars['apiKey'];
@@ -14,9 +15,8 @@ class Controller
         $setCurrencies = "";
         $date = \Carbon\Carbon::now()->toDayDateTimeString();
         $html = "";
-
         try {
-            $configuration = \WHMCS\Database\Capsule::table("tbladdonmodules")->where("module", "=", "wovocurrencyconverter")->get();
+            $configuration = Capsule::table("tbladdonmodules")->where("module", "=", "wovocurrencyconverter")->get();
             if ($configuration) {
                 foreach ($configuration as $obj) {
                     if ($obj->setting == "currencies") {
@@ -64,18 +64,17 @@ class Controller
                     }
                 }
 
-                $html .= <<<EOF
+                $html .= '
                 <div class="text-center">
                      <h1>Currency Converter Rates</h1>
-                     <strong>API Key:</strong> $apiKey<br>
-                     <strong>Currencies:</strong> $currencies<br>
-                     <strong>Base Currency:</strong> $baseCurrency<br>
-                    <strong>Updated at : $date </strong>            
-                </div>    
-                EOF;
+                     <strong>API Key:</strong> ' . $apiKey . '<br>
+                     <strong>Currencies:</strong> ' . $currencies . '<br>
+                     <strong>Base Currency:</strong> ' . $baseCurrency . '<br>
+                    <strong>Updated at : ' . $date . ' </strong>            
+                </div>';
 
 
-                $html .= <<<EOF
+                $html .= '
                 <div class="table-responsive">
                   <table class="table table-striped table-bordered table-hover" id="wovocurrencyconverter_table">
                     <thead>
@@ -84,18 +83,16 @@ class Controller
                         <th>Rate</th>
                       </tr>
                     </thead>
-                    <tbody>
-                EOF;
+                    <tbody>';
 
                 foreach ($allCurrencies as $key => $val) {
-                    $html .= <<<EOF
+                    $html .= '
                       <tr>
-                        <td> $key </td>
-                        <td> $val </td>
-                      </tr>
-                EOF;
+                        <td> ' . $key . ' </td>
+                        <td> ' . $val . ' </td>
+                      </tr>';
                 }
-                $html .= <<<EOF
+                $html .= '
                     </tbody>
                   </table>
                 </div>
@@ -106,8 +103,7 @@ class Controller
                             "processing": true
                         });
                     })                
-                </script>
-                EOF;
+                </script>';
 
                 return $html;
             }
