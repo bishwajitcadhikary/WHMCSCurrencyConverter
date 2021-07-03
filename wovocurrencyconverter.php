@@ -16,7 +16,7 @@ function wovocurrencyconverter_config()
             "(see <a href=\"http://Fixer.IO\">Fixer.IO</a> for supported currency list)",
         "author" => "<a href=\"https://wovosoft.com\">WovoSoft</a>",
         "language" => "english",
-        "version" => "1.0",
+        "version" => "1.1",
         "fields" => [
             "apiKey" => [
                 "FriendlyName" => "API Key",
